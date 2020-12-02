@@ -1,0 +1,20 @@
+[패스워드 최대 사용 기간]
+1. net accounts
+최대 암호 사용 기간 (일):			90
+
+2. 윈도우 서버에 존재하는 계정들의 상세정보를 출력
+
+Q) 윈도우 서버에 존재하는 모든 계정에 대해 NET USER [계정명]을  출력하는 스크립트를 만들어보세요!
+ 주요 스크립트 명령어: for, token, skip, %%j(변수), net user, in 등을 이용할 수 있음
+ FOR token=1 skip=4 %%j ~~~~~~~~~~~ net user %%j	>>txt
+ FOR token=2 skip=4 %%j ~~~~~~~~~~~ net user %%j	>>txt
+ FOR token=3 skip=4 %%j ~~~~~~~~~~~ net user %%j	>>txt
+
+[윈도우 패스워드 크랙]
+1. 윈도우 계정 및 패스워드 시스템 파일 덤프를 통해 Hash 값 확인
+ 1) Windows\System32\Config\SAM (원본)
+ 2) Windows\System32\Config\RegBack\SAM (백업)
+ 3) Tool: openwall.com -> pwdump
+ 4) CMD: PwDump7.exe >>C:\hash.txt
+
+2. 윈도우 Hash 크랙을 이용하여 패스워드 평문 정보 획득
