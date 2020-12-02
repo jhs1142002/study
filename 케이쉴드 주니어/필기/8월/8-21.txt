@@ -1,0 +1,89 @@
+http://www. ~~~.com : 80 
+https://www.naver.com : 443
+http의 default port는 80 port
+https의 default port는 443 port
+
+http : 80 port
+        state-less 구성(연결을 지향하지 않는다.)(그래서 쿠키나 세션을 사용)
+
+SSL -> 암호화 통신
+SSL을 버전업 -> TLS
+
+AP = 무선 공유기
+
+네트워크 모델의 이해
+추상화(개념 잘알아야한다.)
+- 눈으로 볼 수 없는 형태들에 대한 부분들을 이론화해서 간출여내는 방식
+복잡한 자료, 모듈, 시스템으로부터 핵심적인 개념 또는 기능을 간출여낸것.
+
+IP Header에 출발지 ip와 목적지 ip가 담긴다.
+ip는 라우터가 본다.
+2계층 Header에 출발지 mac 주소, 목적지 mac 주소가 담긴다.
+mac 주소는 스위치가 본다.
+
+물리 계층
+케이블
+10 BASE T
+10 -> 속도(앞 숫자 기준은 Mbps 단위)
+BASE -> 통신 방식(Baseband(디지털 방식)와 Broadband(아날로그 방식)로 나뉨)
+T -> 종류, 거리
+
+데이터 링크 계층
+
+어플리케이션 계층 = 인터페이스 s/w
+표현 계층 = 인코딩, 암호화, 복호화
+세션 계층 = port 연결 
+전송 계층 = session
+네트워크 계층 = ip 주소
+데이터 링크 계층 = mac 주소 
+물리 계층 = 비트->전기로 바꿔줌
+
+어플리케이션 계층
+SMTP = 이메일
+FTP = 21port(파일 전송)
+TELNET = 23port(원격 명령)
+DNS = 도메인 주소->IP주소로 변환
+SNMP = 네트워크 상태를 모니터링할 때 사용
+NFS = 유닉스계열에서 많이 사용. 공유 기능
+TFTP = 보안에 취약한 FTP
+
+전송 계층
+TCP = 신뢰성, 클라이언트와 서버간의 데이터를 주고받을 수 있는 상태인지 체크
+UDP = 비신뢰성,  체크 x
+
+인터넷 계층
+IP = 
+ICMP = 
+IGMP = 
+
+ARP = 2계층과 3계층 사이에 위치, MAC 주소 얻어온다.
+RARP = 
+
+링크 계층(or 인터페이스 계층) 
+L2TP
+PPP
+NDP
+MAC
+DSL
+WiFi
+ISDN
+FDDI
+
+김대리가 이대리의 mac주소를 알기위해서
+ping을 보내면 ARP가 생긴다. INFO누르면 
+FFFF.FFFF.FFFF 이런식으로 뜨는데 FORWORD를 누르면
+SWITCH에서 이대리 박대리 라우터로 보낸다.
+그러나 박대리, 라우터는 X표시가 나타난다. 이유는 IP가 다르기때문에
+이대리가 다시 FORWORD하게 되면 SWITCH를 갔다가 김대리한테 다시 가게 되는데 arp -a 하게 되면 mac주소를 알았음을 알수있다.
+
+
+
+
+
+
+
+
+
+
+
+
