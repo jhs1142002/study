@@ -1,0 +1,21 @@
+정보 = 유의미하고 가치를 가진 것을 뜻한다.
+
+- 4차 산업혁명
+- 디지털 트랜~
+- AICBM(이 중에서 B가 중요. B는 빅데이터)
+
+
+무결성 - 통장을 생각하면 편하다
+
+가용성 - 예) 통신사, 핸드폰
+
+R = VAT
+
+KISA-ISMS 인증제도 <-> ISMS(Information Security Management System)
+
+의무 => ISP, IPC, 
+
+
+
+컨설턴트 vs 보안 담당자
+
