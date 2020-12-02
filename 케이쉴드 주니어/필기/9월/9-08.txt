@@ -1,0 +1,51 @@
+1번문제. win7 PC에서 www.kisec.com 사이트가 유해사이트로 지정되어 차단하고자 한다. 다만 사용자 Win7 PC에서만 가능하고 www.kisec.com 사이트의 IP를 찾아 해당 사용자만 접근 차단하도록 하시오.
+- 로그, 핑, nslookup 등 여러가지로 찾을 수 있다.
+- 제일 간단한거는 핑이 제일 편하다. ping www.kisec.com
+- nslookup www.kisec.com
+- nslookup이 좋다. 핑은 하나의 ip만 뜬다. nslookup의 경우 여러개의 ip를 찾을 수 있다.(ex)네이버)
+
+2. All deny 정책은 과연 어떻게 할까?
+- address에 any
+- no conditions로 간단하게 all deny할 수 있다.
+- flag 체크하면 flagged events에 찍힌다.
+3. All deny 정책에서 1.1.1.1 사이트를 허용한다.
+- 1번과 동일하게
+4. All deny 정책에서 www.kisec.com 사이트를 win7 PC만 접속할 수 있도록 하여라.
+- 
+5. naver.com 사이트를 블랙 리스트 관점에서 차단 하고자 한다. 어떻게 네이버 포털 전체를 차단할 수 있을까? 그 방법에 대해 고민해보자.
+- install apps에 web filter 설치
+- 도메인을 대상으로 filter
+- block sites - add - naver.com 입력
+- 디테일한 설정은 아니고 전체적으로 차단하는 것.
+- 방화벽 룰에서 체크되어있는거 다 해제
+- 그래야 가능
+
+---------------------------------------------------------------------------------------
+IPS 구축
+- 
+
+xshell
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
