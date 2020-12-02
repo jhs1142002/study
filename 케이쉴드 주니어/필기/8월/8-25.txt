@@ -1,0 +1,44 @@
+<계정위치> 이것은 홈디렉토리를 의미
+<COM> 이것은 commemt
+
+/etc/passwd 파일
+<계정><pw><UID><GID><COM><계정위치><쉘>
+
+HW - Shell - User
+
+
+
+/etc/shadow 파일
+
+
+0번 표준 입력
+1번 표준 출력
+2번 표준 에러
+
+
+일반데몬 - 독립성을 가지고 있다. 관리포인트 다수(관리 불편)
+슈퍼데몬 - 일관적인 관리가 가능. 하나의 폴더에 존재
+
+1KByte = 1000Byte (o)
+	1024Byte (o)
+
+runlevel = 실행 수준
+0번부터 6번까지 존재
+
+0번 = 종료
+1번 = single
+2번 = single NESX
+3번 = multiUser
+4번 = x
+5번 = GUI
+6번 = 재부팅
+
+
+
+
+
+
+
+
+
+
