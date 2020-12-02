@@ -1,0 +1,51 @@
+ex) 61.100.4.0/24
+0~255까지 확인.검색
+
+shodan은 net:을 붙인다
+ex) net:61.100.4.0/24
+대역을 잘 확인해야한다.
+구분할 줄 알아야 한다.
+주의 깊게 확인. 도메인 같은 정보들
+다른 회사를 모의해킹할수 있다.
+큰일난다.
+
+censys는 도메인의 경우
+
+모의해킹할대
+metasploit 쓸 줄 알아야한다.
+ex) apache 2.4.18 exploit metasploit
+공격 코드를 쏴보는 것.
+
+가이드 라인 632
+
+
+intitle:"index of"
+이런식으로 쓰면 온갖 디렉토리가 노출되는 페이지만 구글이 찾아준다.
+
+사이트를 대상으로 취약한 정보를 수집할 때는
+intitle:"index of" site:도메인
+이런식으로 검색한다.
+
+국내 사이트의 경우에는 
+intitle:"index of" site:kr
+이런식으로
+검색할 사이트가 있으면 풀 도메인
+한국사이트면 kr
+
+ex) intitle:"index of" intext:wp-config.php.bak
+wordpress 백업 파일
+전세계적으로 엄청나게 많이 사용한다.
+wp-config.php이 디폴트로 생기는데 db에 관한 정보가 저장된다.
+
+관리자 페이지 정보 수집
+inurl:admin site:kr
+또는
+inurl:MNG site:kr
+
+ex) intext:이력서 + "010-"
+
+
+
+
+
+
