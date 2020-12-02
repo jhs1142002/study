@@ -1,0 +1,231 @@
+쉘 프로그래밍
+- 첫 번째 줄에 반드시 사용할 쉘을 명시(#!/bin/bash, #!/bin/sh)
+#!/bin/sh : 쉘뱅, 해시뱅
+
+정의되어 있는 변수 해제 : unset
+
+
+
+
+#!/bin/sh : 쉘뱅, 해시뱅
+#!/usr/bin/env python3
+
+C 언어의 경우 변수 생성 방법
+int num
+num = 0
+
+쉘 스크립트 변수 생성 방법
+num=0
+만약 빈 값을 할당 해놓고 있다면
+num=""
+
+1num=0 (x) : 숫자로 시작하는 변수 사용 불가
+- 쉘의 내부 변수 사용 시 문제로 인해 허용하지 않음
+$1num
+$0, $1, $2
+num1=0 (o)
+num-1=0 (x)
+num_1=0 (o)
+
+test_str=""   (O)
+test_str = "" (X)
+test_str= "" (X)
+test_str ="" (X)
+
+${test_str} == $test_str
+
+value="Hello"
+echo $value
+value="World"
+echo $value
+
+출력 값
+Hello
+World
+
+쉘 스크립트 작성 시  /bin/bash가 아닌 /bin/sh 로 하는 이유
+- bash 가 없는 경우가 있으 수 있음(하위호환성 유지)
+
+if(띄어쓰기)[(띄어쓰기)조건식(띄어쓰기)];(띄어쓰기)then
+	실행 구문
+fi
+
+if(띄어쓰기)[(띄어쓰기)조건식(띄어쓰기)];(띄어쓰기)then
+	실행 구문
+elif(띄어쓰기)[(띄어쓰기)조건식(띄어쓰기)];(띄어쓰기)then
+	실행 구문
+else
+	실행 구문
+fi
+
+문자열 비교 시 많이 사용하는 구문
+value=`ps -ef | grep kisec`
+if [ "$value" != "" ]; then
+	실행 구문
+fi
+
+for 변수 in 나눠질 값
+do
+	실행 구문
+done
+
+for str in Hello World Script!
+do
+	echo $str
+done
+
+출력값
+Hello
+World
+Script!
+
+for str in "Hello World Script!"
+do
+	echo $str
+done
+
+출력값
+Hello World Script!
+
+full_str="Hello World Script!"
+for str in $full_str
+do
+	echo $str
+done
+
+출력값
+Hello
+World
+Script!
+
+RESULT_FILE="result_centos_hostname_(날짜와시간).txt"
+
+#!/bin/sh
+RESULT_FILE="result.txt"
+echo "[U-01] root 계정의 원격 접속 제한"
+echo "[U-01] root 계정의 원격 접속 제한" > $RESULT_FILE 2>&1
+
+if [ -f "/etc/pam.d/remote" ]; then
+	pam_chk=`cat /etc/pam.d/remote | egrep -v '^#|^$' | grep "pam_securetty.so"`
+	echo "/etc/pam.d/remote 파일 현황" >> $RESULT_FILE 2>&1
+	echo "`cat /etc/pam.d/remote | egrep -v '^#|^$'`" >> $RESULT_FILE 2>&1
+else
+	TELNET=0
+	echo "/etc/pam.d/remote Not Found" >> $RESULT_FILE 2>&1
+fi
+
+if [ -f "/etc/securetty" ] && [ "$pam_chk" != "" ]; then
+	pts_chk=`cat /etc/securetty | egrep -v '^#|^$' | grep -i 'pts'`
+	echo "/etc/securetty 파일 현황" >> $RESULT_FILE 2>&1
+	echo "`cat /etc/securetty | egrep -v '^#|^$'`" >> $RESULT_FILE 2>&1
+	if [ "$pts_chk" != "" ]; then
+		TELNET=0
+	else
+		TELNET=1
+	fi
+else
+	TELNET=0
+	echo "/etc/securetty Not Found or pam_securetty.so module Not Found" >> $RESULT_FILE 2>&1
+fi
+
+if [ -f "/etc/ssh/sshd_config" ]; then
+	ssh_chk=`cat /etc/ssh/sshd_config | grep -v '^#' | grep -i 'permitrootlogin'`
+	echo "/etc/ssh/sshd_config 파일 현황" >> $RESULT_FILE 2>&1
+	echo "`cat /etc/ssh/sshd_config | egrep -v '^#|^$'`" >> $RESULT_FILE 2>&1
+	if [ "`echo $ssh_chk | awk '{ print $2 }'`" = "no" ]; then
+		SSH=1
+	elif [ "$ssh_chk" = "" ]; then
+		SSH=1
+	else
+		SSH=0
+	fi
+else
+	echo "/etc/ssh/sshd_config Not Found" >> $RESULT_FILE 2>&1
+fi
+if [ $TELNET -eq 1 -a $SSH -eq 1 ]; then
+	echo "결과 : 양호" >> $RESULT_FILE 2>&1
+else
+	echo "결과 : 취약" >> $RESULT_FILE 2>&1
+fi
+
+unset TELNET
+unset SSH
+
+echo "[U-04] 패스워드 파일 보호"
+echo "[U-04] 패스워드 파일 보호" >> $RESULT_FILE 2>&1
+SHADOW=0
+PASSWD=0
+
+if [ -f "/etc/shadow" ]; then
+	SHADOW=1
+	echo "/etc/shadow 파일 현황" >> $RESULT_FILE 2>&1
+	echo "`ls -al /etc/shadow`" >> $RESULT_FILE 2>&1
+else
+	echo "/etc/shadow Not Found" >> $RESULT_FILE 2>&1
+fi
+
+if [ -f "/etc/passwd" ]; then
+	pass_chk=`cat /etc/passwd | awk -F":" '{ print $2 }' | grep -v 'x'`
+	echo "/etc/passwd 파일 현황" >> $RESULT_FILE 2>&1
+	echo "`cat /etc/passwd`" >> $RESULT_FILE 2>&1
+	if [ "$pass_chk" = "" ]; then
+		PASSWD=1
+	fi
+else
+	echo "/etc/passwd Not Found" >> $RESULT_FILE 2>&1
+fi
+
+if [ $SHADOW -eq 1 -a $PASSWD -eq 1 ]; then
+	echo "결과 : 양호" >> $RESULT_FILE 2>&1
+else
+	echo "결과 : 취약" >> $RESULT_FILE 2>&1
+fi
+
+unset SHADOW
+unset PASSWD
+
+echo "[U-11] /etc/syslog.conf 파일 소유자 및 권한 설정"
+echo "[U-11] /etc/syslog.conf 파일 소유자 및 권한 설정" >> $RESULT_FILE 2>&1
+
+if [ -f "/etc/syslog.conf" ]; then
+	sys_file="/etc/syslog.conf"
+elif [ -f "/etc/rsyslog.conf" ]; then
+	sys_file="/etc/rsyslog.conf"
+fi
+
+sys_perm=`stat -c "%a" "$sys_file"`
+sys_owner=`stat -c "%U" "$sys_file"`
+
+owner_perm_val=`echo "$sys_perm" | awk '{ print substr($0, 1, 1)}'`
+group_perm_val=`echo "$sys_perm" | awk '{ print substr($0, 2, 1)}'`
+other_perm_val=`echo "$sys_perm" | awk '{ print substr($0, 3, 1)}'`
+
+echo "/etc/(r)syslog.conf 파일 현황" >> $RESULT_FILE 2>&1
+echo "`ls -al $sys_file`" >> $RESULT_FILE 2>&1
+
+if [ "$owner_perm_val" -le 6 ] && [ "$group_perm_val" -le 4 ] && [ "$other_perm_val" -le 4 ]; then
+	if [ "$sys_owner" = "root" -o "$sys_owner" = "bin" -o "$sys_owner" = "sys" ]; then
+		echo "결과 : 양호" >> $RESULT_FILE 2>&1
+	else
+		echo "결과 : 취약" >> $RESULT_FILE 2>&1
+	fi
+else
+	echo "결과 : 취약" >> $RESULT_FILE 2>&1
+fi
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
