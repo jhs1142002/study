@@ -1,0 +1,15 @@
+192.168.0.250
+
+net use X: \\192.168.0.250\C$ "echo" /user:Administrator
+
+net share 는 확인만 하는것
+
+공유 중지하면 net share에서 안보인다.
+하지만 컴퓨터 다시 시작하면 
+공유 하던게 다시 보인다
+
+M.I.B
+CPU, memory, traffic, storge
+
+vendor
+computename?
