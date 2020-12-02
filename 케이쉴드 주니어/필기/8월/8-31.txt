@@ -1,0 +1,132 @@
+네트워크 보안 : F/W, IPS, WAF
+시스템 보안 : V3, 백신
+정보유출방지 : DLP, DBP
+
+ISP : Internet Service Provider
+이중화 방식(kt, lg, sk) : 하나의 통신사가 장애가 발생했을 때 다른 통신사를 통해 인터넷을 사용할 수 있도록 하는 방식
+
+기업들이 중요하게 생각하는것은 가용성!
+
+Anti DDos
+mitigation(완화) System(100% 완벽한 보안은 없다.)
+
+옛날에 쓰였던 단어
+protection
+prevention
+block
+protect
+
+초록색구간은 DMZ영역(외부와 통신하고 내부와도 통신하는)
+
+빨간색, 노란색구간 
+
+Backbone switch 
+
+LAN 구성 예
+
+망분리
+- 2개로 나뉜다. 논리적 망분리, 물리적 망분리
+
+NAC : 인가되지 않은 사용자가 스위치에 접속했을 때 대처하는 것
+
+방화벽
+- 주요 기능(접근통제, 주소변환, 인증, 감사기록/추적기능, 프록시)
+
+WAF(Web Application Firewall: 웹방화벽)
+- 네트워크 기반 웹 방화벽(Network Based)와 호스트 기반 웹 방화벽(Host Based) 형태로 구성
+- 주요 기능(웹 공격 방지, Positive Security Model 구성, SSL 지원, 어플리케이션 구조 변화에 대한 대응)
+
+
+인종차별관련 용어를 바꾸라고 하는 사람들이 있다.
+(= allowlist?)
+Whitelist: 모두 차단 특정 영역만 허용 / WAF가 속한다.
+Blacklist: 모두 허용 특정 영역만 차단
+(= denylist?)
+
+Host Based
+- modsecurity
+
+IDS (서비스 영향 X(= IDS가 중지되어도 다른 서버에는 영향이 없다.))
+- 모니터링해서 알림 역할 수행(차단하거나 이런 역할을 다른 것이 한다.)
+
+요즘 NIDS < HIDS 추세이다.
+
+IPS (서비스 직접적인 영향 O)
+
+- NBA는 안봐도된다. 
+- WIPS는 특이하다. 잘 보자
+
+IDS/IPS
+- 한계 : 적용 조건에 의해 오탐과 미탐의 빈번함이 크게 다를 수 있으며(<=전문가에 의존적이다.)
+
+해커가 인가된 AP = Rouge AP
+
+WiFi 2.4G(기가 헤르츠)
+5G(Generation)
+
+USB 테더링 차단 x
+Bluetooth 차단 x
+
+NAC은 2가지 종류를 가진다
+- Agent 방식 / Agentless 방식
+
+- Agent 방식 : 단말에 프로그램설치 o.
+- Agentless 방식 : 단말에 프로그램설치 x
+
+window 기반일때는 상위 권한의 계정
+window 최상위 권한은 SYSTEM
+
+Agent방식은 PC가 무거워진다. 성능이 낮아진다. 자세히 볼 수 있다.
+Agentless방식은 
+
+안티 디토스
+DDoS 대응 훈련
+
+DLP(선천적대응조치)
+DRM(후천적대응조치)
+
+tempering변조시키다
+
+Anti-tampering(크랙판, 해적판) <-> Spoofing 속이다.
+많이 비교한다.
+
+EDR
+- 4가지 필수 기능: 탐지, 태응, 조사, 치료
+- 행위 분석, 머신러닝, IOC탐지 등 키워드들이 많이 나온다.
+
+EPP
+- 백신 기반이다.
+- 분석에 대한 키워드들이 많이 나온다.
+- 즉각적인 대응이 조금 느리다.
+
+APT = Advanced Persistent Threat
+
+UTM = Firewall, IPS, NAC
+
+SIEM
+- Intelligence(첩보)(우리나라에서는 불가. 이유 : 데이터가 부족하다.)
+
+
+SOAR
+- Orchestration, Automation 이 중요
+
+
+모의 해킹 : penetration test
+취약점 진단 : Vulnerability assessment(이것이 더 명확하다.)
+	     Vulnerability diagnosis(사람을 진단할 때 사용?)
+
+
+
+
+kail : root / toor
+other : kisec(root) / kisec1234
+          kisec(root) / kisec123
+
+
+사용자 계정으로 들어가는게 더 도움 많이 된다.
+
+
+
+
+
+
