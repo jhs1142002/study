@@ -1,0 +1,81 @@
+어플리케이션이란?
+- 
+
+secure software / software security / security software  차이는?
+- 보안에 취약하지 않고 안전한 형태로 구성되어있는 소프트웨어 / 안전한 소프트웨어
+- 소프트웨어 보안 / 소프트웨어를 보안하기 위해서 일삼는 행위들을 통틀어서 말한다.
+- 보안 솔루션 같은것들 / 보안을 하기 위한 소프트웨어
+
+software는 sound하다.
+- ????
+- 무슨 뜻?
+- 건강하다랑 같은 맥락으로 보면 된다. 
+- 소프트웨어는 안정적이다. / 이런 느낌의 뜻
+
+
+코드의 생명주기?
+- SDLC(Software Development LifeCycle)
+- SSDLC(Security Software Development LifeCycle)
+
+
+Implement, Build, Coding
+- 구현, 구축, 코드 치는것
+
+design -> Implement -> test -> result
+
+PDCA
+- Plan, Do, Check, Act
+
+위협/공격
+
+입력 검증 -> Input Validation
+소프트웨어 변경 -> Tampering
+인증 -> Authentication
+인가 -> Authorization
+구성 관리 -> Misconfiguration
+민감한 정보 -> Information disclosure
+파라미터 조작 -> Parameter forgery
+예외 관리 -> Exception Management
+감사와 로깅 -> Audit & Logging
+
+
+불필요 계정 = 명분 or 명확한 사유가 없는 계정
+보안 수준 = 명확한 사유 <- 이것은 아니다.
+패치관리는 영향도가 엄청나게 중요하다.
+검토 -> 테스팅 -> 모니터링 -> 전사 배포
+기밀성이나 무결성이 아무리좋아도 쓰지 못하면(가용성) 소용없다
+
+로그 관리
+- 데이터가 축적된다. -> Resource(자원)을 할당받는다.
+- 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
